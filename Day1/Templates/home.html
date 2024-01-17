@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial_scale=1">
+</head>
+
+<body>
+    <p>This is from home.html</p>
+    <p>{{ subject1 }}</p>
+    <p>
+       <h4>Submited entries</h4>
+       {% for user in users %}
+       <!-- {{ user }} -->
+       {{ user.user_name }}<br>
+       {% endfor %}
+    </p>
+
+    <form method="POST">
+        <input type="text" name="text_submited">
+        <!-- <input type="submit"> -->
+        <button type="submit" name="/Go">Submit</button>
+    </form>
+</body>
+
+</html>
