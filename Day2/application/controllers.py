@@ -58,18 +58,20 @@ def login():
             return redirect("/register")
 
 
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect("/login")
 
-@app.route('/',methods = ["GET", "POST"])
+@app.route('/',methods = ["GET"])
 @login_required
 def home():
     if request.method == "GET":
-        subject = "Modern Application Development1"
-        users = User.query.all()
-        return render_template("home.html", subject1 = subject,users = users)
-    
-    if request.method == "POST":
-        name = request.form["text_submited"]
-        new_user = User(user_name = name)
-        db.session.add(new_user)
-        db.session.commit()
-        return redirect("/")
+        return render_template("home.html")
+
+@app.route("/user_profile", methods= ["GET"])
+@login_required
+def user_profile():
+    if request.method == "GET":
+        return render_template("profile.html")
