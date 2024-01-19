@@ -5,7 +5,7 @@ from flask_bcrypt import Bcrypt
 
 
 
-from .model import db,User
+from .model import db,User,Posts,PostComments
 
 #-------initiallize login manager--------------
 bcrypt = Bcrypt(app)
@@ -76,8 +76,8 @@ def user_profile():
     if request.method == "GET":
         user_logined_id = current_user.user_id
         user = User.query.filter_by(user_id = user_logined_id).first()
-
-        return render_template("profile.html", user = user)
+        posts = Posts.query.filter_by(user_id = user_logined_id).all()
+        return render_template("profile.html", user = user,posts = posts)
     
 @app.route("/edit_profle", methods = ["GET","POST"])
 @login_required
@@ -99,3 +99,27 @@ def edit_profile():
         user.profile_img_path = "../static/IMG/" + profile_pic.filename
         db.session.commit()
         return redirect('/user_profile')
+
+
+
+@app.route("/add_post", methods=["GET","POST"])
+@login_required
+def add_post():
+    if request.method == "GET":
+        return render_template("add_post.html")
+    if request.method == "POST":
+        post_img = request.files["post_img"]
+        post_desc = request.form["post_desc"]
+        user_logined_id = current_user.user_id
+        post_img.save("static/IMG/Posts_Images/" + post_img.filename)
+        new_post = Posts(user_id=user_logined_id, pos_image_path= "../static/IMG/Posts_Images/" + post_img.filename, post_desc=post_desc)
+        db.session.add(new_post)
+        db.session.commit()
+        return redirect('/user_profile')
+    
+
+@app.route("/user_post/<int:post_id>",methods=["GET","POST"])
+@login_required
+def user_post(post_id):
+    post = Posts.query.filter_by(post_id=post_id).first()
+    return render_template("user_post.html",post=post)

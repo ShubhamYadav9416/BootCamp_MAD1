@@ -26,6 +26,11 @@ class Posts(db.Model):
     post_desc = db.Column(db.String())
     like = db.Column(db.Integer())
 
+    def __init__(self,user_id, pos_image_path, post_desc):
+        self.user_id = user_id
+        self.post_image_path = pos_image_path
+        self.post_desc = post_desc
+
 
 
 class PostComments(db.Model):

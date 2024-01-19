@@ -35,6 +35,8 @@
                         <a class="nav-link active" aria-current="page" href="{{url_for("logout")}}">Logout</a>
                     </li>
                 </ul>
+                <a class="nav-link active" aria-current="page" href="{{url_for("add_post")}}"><i class="bi bi-plus-square-fill" style="font-size: 25px;"></i></a> &nbsp;&nbsp;&nbsp;
+
                 <form class="d-flex" role="search">
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                     <button class="btn btn-outline-success" type="submit">Search</button>
@@ -58,15 +60,15 @@
                                     <img src={{ user.profile_img_path }} class="float-start"
                                         style="height: 175px; width: 175px; border-radius: 10rem;">
                                 </div>
-                                <div class="col-8">
+                                <div class="col-5">
                                     <div class="user_info">
-                                        <p>{{ user.user_mail.split('@')[0] }} &nbsp;&nbsp;<a href="{{url_for("edit_profile")}}"><button type="button"
-                                                class="btn btn-outline-info">Edit</button></a></p>
+                                        <p>{{ user.user_mail.split('@')[0] }} &nbsp;&nbsp;<a href="{{url_for("edit_profile")}}"><i class="bi bi-pencil-square" style="font-size: 20px;"></i></a></p>
                                         <p><a>12 Posts</a>&nbsp; &nbsp; <a> 50 Followers</a> &nbsp; &nbsp; <a>100
                                                 Following</a></p>
                                         <p> {{user.user_bio}}</p>
                                     </div>
                                 </div>
+                                <div class="col-3"
 
                             </div>
                         </div>
@@ -80,19 +82,21 @@
             </div>
         </div>
         <div class=""user_posts>
-            <hr>
+            <hr style="border:2px solid black">
             <div class="container text-center">
                 <div class="row">
                   <div class="col-1">
                     
                   </div>
                   <div class="col">
+                {% for post in posts %}
+                    <a href={{url_for("user_post",post_id = post.post_id)}}><img src={{post.post_image_path}} class="img-thumbnail float-start" alt="..." style="height: 250px; width: 250px;"></a>
+                {% endfor %}
+                    <!-- <img src="../static/IMG/2150710042.jpg" class="img-thumbnail float-start" alt="..." style="height: 250px; width: 250px;">
+                    <img src="../static/IMG/2150710042.jpg" class="img-thumbnail float-start" alt="..." style="height: 250px; width: 250px;">
+                    <img src="../static/IMG/2150710042.jpg" class="img-thumbnail float-start" alt="..." style="height: 250px; width: 250px;">
 
-                    <img src="../static/IMG/2150710042.jpg" class="img-thumbnail float-start" alt="..." style="height: 250px; width: 250px;">
-                    <img src="../static/IMG/2150710042.jpg" class="img-thumbnail float-start" alt="..." style="height: 250px; width: 250px;">
-                    <img src="../static/IMG/2150710042.jpg" class="img-thumbnail float-start" alt="..." style="height: 250px; width: 250px;">
-
-                    <img src="../static/IMG/2150710042.jpg" class="img-thumbnail float-start" alt="..." style="height: 250px; width: 250px;">
+                    <img src="../static/IMG/2150710042.jpg" class="img-thumbnail float-start" alt="..." style="height: 250px; width: 250px;"> -->
 
                   </div>
                   <div class="col-1">

@@ -29,13 +29,15 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{{url_for("home")}}">Home</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="{{url_for("user_profile")}}">Profile</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="{{url_for("logout")}}">Logout</a>
                     </li>
                     </ul>
-                        <a class="nav-link active" aria-current="page" href="{{url_for("add_post")}}"><i class="bi bi-plus-square-fill" style="font-size: 25px;"></i></a> &nbsp;&nbsp;&nbsp;
                     <form class="d-flex" role="search">
                         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                         <button class="btn btn-outline-success" type="submit">Search</button>
@@ -44,6 +46,31 @@
             </div>
         </div>
     </nav>
+
+    <div class="container text-center">
+        <div class="row">
+          <div class="col">
+    
+          </div>
+          <div class="col">
+    
+            <form method="post" enctype="multipart/form-data" >
+                
+                  <div class="mb-3">
+                    <label for="formFile" class="form-label">Upload Post</label>
+                    <input class="form-control" type="file" id="formFile" name="post_img">
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleFormControlTextarea1" class="form-label">Discription:</label>
+                    <input class="form-control" id="exampleFormControlTextarea1" rows="3"  name="post_desc" style="height: 100px;">
+                  </div>
+                  <button type="submit" class="btn btn-outline-primary">Submit</button>
+            </form>
+          </div>
+          <div class="col">
+            
+          </div>
+        </div>
 </body>
 
 </html>
