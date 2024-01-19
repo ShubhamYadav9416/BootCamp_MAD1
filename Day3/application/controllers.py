@@ -78,3 +78,24 @@ def user_profile():
         user = User.query.filter_by(user_id = user_logined_id).first()
 
         return render_template("profile.html", user = user)
+    
+@app.route("/edit_profle", methods = ["GET","POST"])
+@login_required
+def edit_profile():
+    if request.method == "GET":
+        user_logined_id = current_user.user_id
+        user = User.query.filter_by(user_id = user_logined_id).first()
+        return render_template("edit_profile.html", user=user)
+    if request.method == "POST":
+        user_name = request.form["user_name"]
+        user_bio = request.form["user_bio"]
+        profile_pic = request.files["profile_pic"]
+        profile_pic.save("static/IMG/" + profile_pic.filename)
+
+        user_logined_id = current_user.user_id
+        user = User.query.filter_by(user_id = user_logined_id).first()
+        user.user_name = user_name
+        user.user_bio = user_bio
+        user.profile_img_path = "../static/IMG/" + profile_pic.filename
+        db.session.commit()
+        return redirect('/user_profile')

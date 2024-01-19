@@ -60,11 +60,11 @@
                                 </div>
                                 <div class="col-8">
                                     <div class="user_info">
-                                        <p>{{ user.user_mail.split('@')[0] }} &nbsp;&nbsp;<button type="button"
-                                                class="btn btn-outline-info">Edit</button></p>
+                                        <p>{{ user.user_mail.split('@')[0] }} &nbsp;&nbsp;<a href="{{url_for("edit_profile")}}"><button type="button"
+                                                class="btn btn-outline-info">Edit</button></a></p>
                                         <p><a>12 Posts</a>&nbsp; &nbsp; <a> 50 Followers</a> &nbsp; &nbsp; <a>100
                                                 Following</a></p>
-                                        <p> this is user Profile.</p>
+                                        <p> {{user.user_bio}}</p>
                                     </div>
                                 </div>
 
