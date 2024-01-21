@@ -241,3 +241,14 @@ def comment(post_id):
         db.session.add(new_comment)
         db.session.commit()
         return redirect(url_for("user_post",post_id=post_id))
+    
+
+@app.route("/search", methods=["GET","POST"])
+@login_required
+def search():
+    if request.method == "GET":
+        return render_template("search.html")
+    if request.method == "POST":
+        search_for = "%" + request.form["search_for"] + "%"
+        search_results = User.query.filter(User.user_name.like(search_for)).all()
+        return render_template("search.html", search_results=search_results)
