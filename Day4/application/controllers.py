@@ -1,11 +1,11 @@
-from flask import redirect, render_template, request, flash
+from flask import redirect, render_template, request, flash, url_for
 from flask import current_app as app
 from flask_login import login_user, LoginManager, login_required, logout_user, current_user
 from flask_bcrypt import Bcrypt
 import os
 
 
-from .model import db,User,Posts,PostComments
+from .model import db,User,Posts,PostComments,UserFollower
 
 #-------initiallize login manager--------------
 bcrypt = Bcrypt(app)
@@ -68,7 +68,9 @@ def logout():
 @login_required
 def home():
     if request.method == "GET":
-        return render_template("home.html")
+        user_logined_id = current_user.user_id
+        user = User.query.filter_by(user_id = user_logined_id).first()
+        return render_template("home.html",user=user)
 
 @app.route("/user_profile", methods= ["GET"])
 @login_required
@@ -77,7 +79,13 @@ def user_profile():
         user_logined_id = current_user.user_id
         user = User.query.filter_by(user_id = user_logined_id).first()
         posts = Posts.query.filter_by(user_id = user_logined_id).all()
-        return render_template("profile.html", user = user,posts = posts)
+        no_of_posts = Posts.query.filter_by(user_id = user_logined_id).count()
+
+        no_of_following = UserFollower.query.filter_by(user_id = user_logined_id).count()
+        no_of_follower = UserFollower.query.filter_by(follower_user_id = user_logined_id).count()
+
+        return render_template("profile.html", user = user,posts = posts,no_of_posts=no_of_posts,
+                               no_of_follower = no_of_follower, no_of_following=no_of_following)
     
 @app.route("/edit_profle", methods = ["GET","POST"])
 @login_required
@@ -142,9 +150,10 @@ def updt_post(post_id):
         return render_template("edit_post.html", post=post)
     if request.method == "POST":
         post_img = request.files["post_img"]
-        post_img.save("static/IMG/Posts_Images/" + post_img.filename)
+        if post_img:
+            post_img.save("static/IMG/Posts_Images/" + post_img.filename)
+            post.post_image_path = "../static/IMG/Posts_Images/" + post_img.filename
         post.post_desc = request.form["post_desc"]
-        post.post_image_path = "../static/IMG/Posts_Images/" + post_img.filename
         db.session.commit()
         return redirect("/user_profile")
 
@@ -152,5 +161,58 @@ def updt_post(post_id):
 @app.route("/user_post/<int:post_id>",methods=["GET","POST"])
 @login_required
 def user_post(post_id):
+    user_logined_id = current_user.user_id
     post = Posts.query.filter_by(post_id=post_id).first()
-    return render_template("user_post.html",post=post)
+    show_dlt_edit_buttons = False
+    if post.user_id == user_logined_id:
+        show_dlt_edit_buttons = True
+    return render_template("user_post.html",post=post,show_dlt_edit_buttons=show_dlt_edit_buttons)
+
+@app.route("/other_user/<int:others_user_id>", methods=["GET"])
+@login_required
+def other_user(others_user_id):
+    if request.method == "GET":
+        user_logined_id = current_user.user_id
+        user = User.query.filter_by(user_id = user_logined_id).first()
+        other_user = User.query.filter_by(user_id = others_user_id).first()
+        other_user_posts = Posts.query.filter_by(user_id = others_user_id).all()
+        other_user_no_of_posts = Posts.query.filter_by(user_id = others_user_id).count()
+        following_details = UserFollower.query.filter_by(user_id = others_user_id).first()
+        show_unfollow_button,show_follow_button = False, False
+        if user_logined_id != others_user_id:
+            if following_details:
+                print("3")
+                show_unfollow_button = True
+            else:
+                print("2")
+                show_follow_button = True
+        
+        no_of_following = UserFollower.query.filter_by(user_id = others_user_id).count()
+        no_of_follower = UserFollower.query.filter_by(follower_user_id = others_user_id).count()
+
+
+
+        return render_template("profile.html",show_follow_button= show_follow_button,show_unfollow_button=show_unfollow_button ,
+                               other_user = True, user_logined = user,user=other_user, posts = other_user_posts, 
+                               no_of_posts = other_user_no_of_posts,no_of_following=no_of_following, no_of_follower=no_of_follower)
+    
+
+@app.route("/follow/<int:others_user_id>")
+@login_required
+def follow(others_user_id):
+    user_logined_id = current_user.user_id
+    follow = UserFollower(user_id = others_user_id, follower_user_id = user_logined_id)
+    db.session.add(follow)
+    db.session.commit()
+    return redirect(url_for("other_user", others_user_id=others_user_id))
+
+@app.route("/unfollow/<int:others_user_id>")
+@login_required
+def unfollow(others_user_id):
+    user_logined_id  = current_user.user_id
+    unfollow = UserFollower.query.filter_by(user_id = others_user_id).filter_by(follower_user_id= user_logined_id).first()
+    print(unfollow)
+    db.session.delete(unfollow)
+    db.session.commit()
+    # return redirect(url_for("other_user", others_user_id=others_user_id))
+    return "hello"

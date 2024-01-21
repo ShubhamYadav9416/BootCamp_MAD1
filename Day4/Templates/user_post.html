@@ -58,6 +58,7 @@
                                     style="font-size: 20px; color:red"></i> &nbsp;&nbsp;&nbsp;&nbsp;
                                 1 &nbsp;<i class="bi bi-chat-fill" style="font-size: 20px;"></i><br>
                             </p>
+                            {% if show_dlt_edit_buttons == True %}
                             <p class="card-text float-end"> <a href="{{url_for("updt_post",
                                     post_id=post.post_id)}}"><button type="button" class="btn btn-outline-warning">
                                         <i class="bi bi-pencil-square" style="font-size: 20px; color: rgb(42, 70, 21);"></i>&nbsp;Edit
@@ -67,6 +68,7 @@
                                         <i class="bi bi-trash" style="font-size: 20px; color: brown;"></i>&nbsp;Delete
                                         Post</button></a>
                             </p>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="card" style="width: 728px;">
